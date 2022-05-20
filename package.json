@@ -1,0 +1,29 @@
+{
+  "name": "cregr-0.01",
+  "version": "0.0.1",
+  "description": "first trial",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "install-app-deps"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lanigb"
+  },
+  "keywords": [
+    "declinaison",
+    "russe"
+  ],
+  "author": "Alain Bertrand",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "electron": "^18.2.3",
+    "electron-builder": "^23.0.3"
+  },
+  "dependencies": {
+    "aa-sqlite": "^1.0.29",
+    "fs": "^0.0.1-security",
+    "sqlite3": "^5.0.8"
+  }
+}

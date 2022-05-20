@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+  <link rel="stylesheet" href="style.css" />
+  <title>CREGR</title>
+</head>
+
+<body>
+  <div id="page">
+    <div id="container">
+
+      <div id="activity">Activités<br>
+        <button id="decl">Déclinaison</button>
+        <button id="conj">Conjugaison</button>
+      </div>
+      
+      <div id="decl_param">
+        <button class="accordion" id="pos_button">Type grammatical</button>
+            <div id="pos" class="panel">
+            <input id="sub_check" type="checkbox" name="substantive" />
+            <label for="sub_check"> Substantifs</label><br>
+            <input id="adj_check" type="checkbox" name="adjective" />
+            <label for="adj_check"> Adjectifs</label><br>
+            <input id="pron_check" type="checkbox" name="pronoun" />
+            <label for="pron_check"> Pronoms</label><br>
+          </div>
+        <button class="accordion" id="case_button">Cas</button>
+          <div id="case" class="panel">
+            <input id="nom_check" type="checkbox" name="nominative" />
+            <label for="nom_check"> Nominatif</label><br>
+            <input id="gen_check" type="checkbox" name="genitive" />
+            <label for="gen_check"> Génitif</label><br>
+            <input id="acc_check" type="checkbox" name="accusative" />
+            <label for="acc_check"> Accusatif</label><br>
+            <input id="dat_check" type="checkbox" name="dative" />
+            <label for="dat_check"> Datif</label><br>
+            <input id="inst_check" type="checkbox" name="instrumental" />
+            <label for="inst_check"> Instrumental</label><br>
+            <input id="gen_check" type="checkbox" name="genitive" />
+            <label for="gen_check"> Génitif</label><br>
+          </div>
+        <button class="accordion" id="num_button">Nombre</button>
+          <div id="num" class ="panel">
+            <input id="sin_check" type="checkbox" name="singular" />
+            <label for="sin_check"> Singulier</label><br>
+            <input id="plur_check" type="checkbox" name="plural" />
+            <label for="plur_check"> pluriel</label><br>
+          </div>
+        <button class="accordion" id="freq_button">Fréquence</button>
+          <div class="panel" id="freq">
+            <input id="most_rad" type="radio" name="freq" />
+            <label for="most_rad"> Les plus fréquents</label><br>
+            <input id="med_rad" type="radio" name="freq" />
+            <label for="med_rad"> Assez fréquents</label><br>
+            <input id="all_rad" type="radio" name="freq" />
+            <label for="allrad"> Tous</label><br>
+          </div>
+      </div>
+      <div class="element 3">Element<span id="decl">
+          <button id="start">Commencer</button>
+          <script src="script.js"></script><br>
+          <p id="case"></p>
+      
+        </span>
+      </div>
+
+
+
+      </div>
+    </div>
+
+</body>
+
+</html>
