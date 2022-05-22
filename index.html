@@ -12,14 +12,18 @@
 
 <body>
   <div id="page">
+    <h3></h3>
     <div id="container">
 
-      <div id="activity">Activités<br>
+      <div id="activity">
+        <h3>Activités</h3><br>
         <button id="decl">Déclinaison</button>
         <button id="conj">Conjugaison</button>
       </div>
-      
+      <div id="param_box">
+      <h3>Paramètres</h3><br>
       <div id="decl_param">
+        
         <button class="accordion" id="pos_button">Type grammatical</button>
             <div id="pos" class="panel">
             <input id="sub_check" type="checkbox" name="substantive" />
@@ -41,13 +45,13 @@
             <label for="dat_check"> Datif</label><br>
             <input id="inst_check" type="checkbox" name="instrumental" />
             <label for="inst_check"> Instrumental</label><br>
-            <input id="gen_check" type="checkbox" name="genitive" />
-            <label for="gen_check"> Génitif</label><br>
+            <input id="prep_check" type="checkbox" name="genitive" />
+            <label for="prep_check"> Prépositionnel</label><br>
           </div>
         <button class="accordion" id="num_button">Nombre</button>
           <div id="num" class ="panel">
-            <input id="sin_check" type="checkbox" name="singular" />
-            <label for="sin_check"> Singulier</label><br>
+            <input id="sing_check" type="checkbox" name="singular" />
+            <label for="sing_check"> Singulier</label><br>
             <input id="plur_check" type="checkbox" name="plural" />
             <label for="plur_check"> pluriel</label><br>
           </div>
@@ -58,15 +62,17 @@
             <input id="med_rad" type="radio" name="freq" />
             <label for="med_rad"> Assez fréquents</label><br>
             <input id="all_rad" type="radio" name="freq" />
-            <label for="allrad"> Tous</label><br>
+            <label for="all_rad"> Tous</label><br>
           </div>
-      </div>
-      <div class="element 3">Element<span id="decl">
           <button id="start">Commencer</button>
           <script src="script.js"></script><br>
-          <p id="case"></p>
+        </div>
+      </div>
+      <div class="quizz">
+        <h3>Quizz</h3>
+                    <p id="case"></p>
       
-        </span>
+        
       </div>
 
 
