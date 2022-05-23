@@ -63,3 +63,10 @@ h3 {
   background-color: #92a8d1; 
   text-align: center; 
 }
+#decl_quizz {
+ display: none;
+}
+#word_question{
+  text-align: center; 
+  font-size: 15px;
+}
