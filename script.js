@@ -14,13 +14,15 @@ document.getElementById("freq_button").addEventListener("click", toggleFreq);
 
  /**
   * 
-  * shows the question div
+  * shows the question div from the values in
+  * global variable decl_question
   * 
   */
 function showQuestion(){
-     elem =document.getElementById("decl_quizz");
+    //show the translated meaning
+     elem =document.getElementById("meaning");
      elem.style.display ="block";
-     elem.innerHTML = decl_question['clearQuestion'];
+     elem.innerHTML = decl_question['meaningQuestion'];
  }
 function toggleFreq(){
     let myDiv = document.getElementById("freq");
@@ -113,10 +115,174 @@ async function getCase(db){
   *  drill  controlling functions
   * 
   * ****************************************/
+/**
+ * 
+ *  @returns nothing but update global variable decl_question 
+  * with correct answer
+ */
+async function makeAnswer() {
+    const fs = require("fs")
+    const sqlite = require("aa-sqlite")
+    await sqlite.open('cregr_db.db');
+    if (decl_question['sub']) {
+        // find answer for substantive
+        //build case identification
+        console.log("decl_question avant remonse", decl_question);
+        sql = "SELECT english FROM cas_usuels WHERE abrev ='" + decl_question['case'] + "'";
+        console.log(' sql english', sql);
+        r = await sqlite.get(sql);
+        caseDen = r.english;
+        console.log("caseDen", caseDen)
+        sql = "SELECT english FROM vocabulaire_grammatical WHERE abrev ='" + decl_question['num'] + "'";
+        r = await sqlite.get(sql);
+        caseDen = caseDen + "_" + r.english;
+        console.log("caseDen", caseDen);
+        // get the form
+        sql = "SELECT " + caseDen + " FROM substantives WHERE sub_id='" + decl_question['sub'] + "'";
+        console.log("sub answer ", sql);
+        r = await sqlite.get(sql);
+        decl_question['answer'] = r[caseDen];
+        console.log('anwer :', decl_question['answer']);
+    }
+    if (decl_question['adj']) {
+        // find answer for adjec
+        //build case identification
+        console.log("decl_question avant remonse", decl_question);
+        gender = decl_question['gender']
+        if (!decl_question['sub'] && decl_question['num']=='plur'){
+            gender = 'plur'
+        }
+        console.log(' gender', gender);
+        sql = "SELECT english FROM vocabulaire_grammatical WHERE abrev ='" + gender + "'";
+        console.log(' sql english', sql);
+        r = await sqlite.get(sql);
+        caseDen = r.english;
+        console.log("caseDen", caseDen)
+        sql = "SELECT english FROM cas_usuels WHERE abrev ='" + decl_question['case'] + "'";
+        r = await sqlite.get(sql);
+        caseDen = caseDen + "_" + r.english;
+        if (decl_question['case']=='acc'){
+            caseDen = caseDen + "_"+decl_question['anim'];
+        }
+        console.log("caseDen", caseDen);
+        // get the form
+        sql = "SELECT " + caseDen + " FROM adjectives WHERE adj_id='" + decl_question['adj'] + "'";
+        console.log("adj answer ", sql);
+        r = await sqlite.get(sql);
+        decl_question['answer'] = r[caseDen] + " " + decl_question['answer'];
+        console.log('anwer :', decl_question['answer']);
+    }
+
+ }
+ /**
+  * 
+  *  @returns nothing but update global variable decl_question 
+  * with russian words
+  * 
+  */
+async function makeQuestions(){
+    const fs = require("fs")
+    const sqlite = require("aa-sqlite")
+    await sqlite.open('cregr_db.db');
+    russianQes = "";
+    sql ="";
+    if (decl_question['adj']){
+        sql= "SELECT form, french FROM main_table WHERE id ='"+decl_question['adj']+"'";
+        console.log('sql adj question',sql)
+        r = await sqlite.get(sql);
+        console.log('sql adj question',sql)
+        console.log(" adj choisi", r)
+        decl_question['russianQuestion']  = r.form + " ";
+        decl_question['meaningQuestion']  = r.french + " ";
+    }
+    if (decl_question['sub']){
+        console.log('sql adj question',sql)
+        sql= "SELECT form, french FROM main_table WHERE id ='"+decl_question['sub']+"'";
+        r = await sqlite.get(sql);
+        console.log('sql sub question',sql)
+        //console.log(" adj choisi", r)
+        decl_question['russianQuestion']  =decl_question['russianQuestion'] + " " + r.form ;
+        decl_question['meaningQuestion']  =decl_question['meaningQuestion']+ " " + r.french ;
+    }
+    // make grammar question 
+        // find  the appelation of the case
+        console.log("make grammar question");
+        sql = "SELECT french, english FROM cas_usuels WHERE abrev ='" + decl_question['case'] + "'"
+        console.log('req : ', sql)
+        r = await sqlite.get(sql)
+        decl_question['clearQuestion'] = r.french;
+        //decl_question['case'] = r.english;
+
+    if (decl_question['sub']) {
+        sql = "SELECT french FROM vocabulaire_grammatical WHERE abrev = '" + decl_question['num'] + "'";
+        r = await sqlite.get(sql);
+        if (decl_question['num']== 'plur'){
+            decl_question['gender']='plur';
+        }
+        decl_question['clearQuestion'] = decl_question['clearQuestion'] + " " + r.french;
+        gendQuestion = "";
+        console.log("choosen pos", pos_target);
+        console.log("valeur de sub", pos_target["sub"]);
+    } else {
+        console.log("adjec gramma question", decl_question);
+        //sql= ""SELECT french, english FROM cas_usuels WHERE abrev ='" + decl_question['case'] + "'"
+        sql = "SELECT french FROM vocabulaire_grammatical WHERE abrev = '" + decl_question['gender'] + "'";
+        r = await sqlite.get(sql);
+        decl_question['clearQuestion'] = decl_question['clearQuestion'] +" "+ r.french;
+        if (decl_question["case"]== 'acc'){
+            sql = "SELECT french FROM vocabulaire_grammatical where abrev ='"+decl_question["anim"]+"'";
+            r = await sqlite.get(sql);
+            decl_question["clearQuestion"] = decl_question["clearQuestion"] +" "+ r.french;
+        }
+        console.log("choosen pos", pos_target);
+        console.log("valeur de sub", pos_target["sub"]);
+    }
+      
+
+    
+
+    console.log("questions  russiondefined", decl_question);
+}
+/** 
+ * 
+ * @returns nothing but update global variable decl_question 
+ *  with  parameters not yet fixed
+ * 
+ */
+
 
 /**
  * 
- * @returns a substantive choosen in the correct frequency range
+ * @returns nothing but update global variable decl_question 
+ *  with adjective choosen in the correct frequency range
+ * 
+ */
+async function chooseAdjective(){
+    const fs = require("fs")
+    const sqlite = require("aa-sqlite")
+    await sqlite.open('cregr_db.db');
+    // select all the word id whose whose sub_id is < to limit
+    req ="SELECT id FROM adjectives WHERE adj_id < "+ adj_freq_indices[freq_target];
+    console.log(req);
+    r = await sqlite.all(req, [])
+    let vocaId = []
+    r.forEach(function(row) {
+        vocaId.push(row.id);
+        //console.log("Read:", row.id, row.sub_id, row.nominative_singular)    
+    });
+    //take a id in  the list 
+    id = vocaId[Math.floor(Math.random()* vocaId.length)];
+    req = "select *FROM adjectives WHERE id = '"+ id +"'";
+    r = await sqlite.get(req);
+    console.log(" adj choisi", r)
+    decl_question['adj']  = r.adj_id;
+    console.log(" dec_question",decl_question);
+}
+
+/**
+ * 
+ * @returns nothing but update global variable decl_question 
+ *  with substantive choosen in the correct frequency range
  */
 async function chooseSubstantive() {
     
@@ -132,8 +298,34 @@ async function chooseSubstantive() {
         vocaId.push(row.id);
         //console.log("Read:", row.id, row.sub_id, row.nominative_singular)    
     });
-    console.log("nombre de noms ;",vocaId.length )
-    return "";
+    //take a id in  the list 
+    id = vocaId[Math.floor(Math.random()* vocaId.length)];
+    req = "select *FROM substantives WHERE id = '"+ id +"'";
+    console.log("nom choisi ;",vocaId.length );
+    r = await sqlite.get(req);
+    console.log(" sub chosis", r)
+    if (r.type == 'inanimate') {
+        decl_question['anim'] = 'inan';
+    } else {
+        decl_question['anim'] = 'anim';
+    }
+    console.log('switch', r.gender)
+    switch(r.gender){
+        case 'feminine':
+            decl_question['gender']='fem';
+            console.log('fem)');
+            break;
+        case 'masculine': 
+            decl_question['gender']='masc';
+            console.log('masc');
+            break;
+        default:
+            decl_question['gender']='neut';
+            console.log('neut');
+    }
+    decl_question['sub']  = r.sub_id;
+    console.log(" dec_question",decl_question);
+
 
 }
 
@@ -309,50 +501,50 @@ function getCaseQuestion(){
  function initDrill(){
     // first check whether all params  have at least one check
     if (paramOK()) {
-        //choosenCases = retrieveCases();
+        choosenCases = retrieveCases();
         choosenPos = retrievePos();
-        //choosenNum = retrieveNum();
-        caseAbrev = getCaseQuestion();
-        numAbrev = getNumQuestion();
-        genderAbrev = getGenderForAdjOnly();
-        //decl_question[cas]= caseAbrev;
-        decl_question[num] = numAbrev;
+        choosenNum = retrieveNum();
         runDrill();
     }
 }
 async function runDrill(){
-    // start to query db
-    const fs = require("fs")
-    const sqlite = require("aa-sqlite")
-    await sqlite.open('cregr_db.db');
-    // find  the appelation of the case
-    let req = "SELECT french FROM cas_usuels WHERE abrev ='" + caseAbrev + "'"
-    console.log('req : ', req)
-
-    r = await sqlite.get(req)
-    gramQuestion = r.french;
-    req = "SELECT french FROM vocabulaire_grammatical WHERE abrev = '" + numAbrev + "'";
-    r = await sqlite.get(req);
-    gramQuestion = gramQuestion + " " + r.french;
-    gendQuestion = "";
-    console.log("choosen pos", pos_target);
-    console.log("valeur de sub", pos_target["sub"]);
-    if (!pos_target["sub"] && caseAbrev == 'acc') {
-        // choix de animé
-        animQ = getAnimQuestion();
-        decl_question['anim'] = animQ;
-        console.log("anim ", animQ);
-        req = " SELECT french FROM vocabulaire_grammatical WHERE abrev = '" + animQ + "'";
-        r = await sqlite.get(req);
-        gramQuestion = gramQuestion + " " + r.french;
+    for ([key, val] of Object.entries(decl_question)) {
+        decl_question[key] ="";
     }
-    
-    decl_question["clearQuestion"] = gramQuestion;
-    updateFrequency();
+    //console.log('decl_question cleaned',decl_question )
+    decl_question['case']= getCaseQuestion();
+    //console.log('decl_question avec case',decl_question )
+    decl_question['num']= getNumQuestion();
+    //console.log('decl_question avec num',decl_question )
+        //genderAbrev = getGenderForAdjOnly();
+        //decl_question[cas]= caseAbrev;
+        //decl_question[num] = numAbrev;
+
+    // start to query db
+        updateFrequency();
     //chose the words
     if (pos_target['sub']){
-        decl_question['sub'] = chooseSubstantive();
+        console.log("call choose substantive");
+        await chooseSubstantive();
     }
+    if (!pos_target["sub"]){
+        decl_question['gender'] = getGenderForAdjOnly();
+        if (decl_question['case'] == 'acc') {
+            // choix de animé
+            decl_question['anim'] = getAnimQuestion();
+            console.log(" choix animimé ");
+        } else {
+            console.log("pas de choix de animé ", pos_target['sub'], decl_question['cas']);
+        }
+    }
+    if(pos_target['adj']){
+        console.log("call choose adjective");
+        await chooseAdjective();
+
+    }
+    await makeQuestions();
+    await makeAnswer();
+    document.getElementById('decl_quizz').style.display ="block";
     showQuestion();
     //caseText.innerHTML = await getCase(sqlite)
 }
@@ -377,7 +569,10 @@ var number_target = {
     sing : true,
     plur : true
 }
-var adj_gender_list = ["masc", "fem", "neut","plu"]
+var adj_gender_list = ["masc", "fem", "neut","plur"]
+
+
+
 var freq_target = "most";
 var choosenCases = [];
 var choosenPos = {sub : false, adj: false, pron : false};
@@ -386,10 +581,13 @@ var choosenNum = [];
 var decl_question = {
  case : "",
  num : "",
- isAnim :"",
+ gender : "",
+ anim : "",
  clearQuestion : "",
+ russianQuestion : "",
+ meaningQuestion: "",
  sub : "",
- adj_: "",
+ adj : "",
  pron :"",
  answer :""
 };
@@ -400,6 +598,7 @@ const sub_freq_indices ={
     all : "10000"
 };
 const adj_freq_indices = {
-    most: 883,
-    med: 3753
+    most: "883",
+    med: "3753",
+    all : "10000"
 }

@@ -6,7 +6,7 @@
     justify-content: space-between;
     align-items: baseline;
     /*height: 450px;   */
-    width: 400 px;
+    width: 750 px;
 }
 #activity{
     display: flex;
@@ -62,11 +62,28 @@ width: 100%;
 h3 {
   background-color: #92a8d1; 
   text-align: center; 
+  max-width: 150;
+  min-width: 150px;
 }
 #decl_quizz {
- display: none;
+  display: none;
+  max-width: 200px;
+  min-width: 200px;
 }
 #word_question{
   text-align: center; 
   font-size: 15px;
+}
+#meaning {
+  /*display: none;*/
+  text-align: center;
+  max-width: 200px;
+  min-width: 200px;
+  font-size: 12px;
+}
+#russianquestion{
+  text-align: center;
+  max-width: 200px;
+  min-width: 200px;
+  font-size: 16px;
 }
