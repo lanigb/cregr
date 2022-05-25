@@ -1,10 +1,14 @@
-document.getElementById("start").addEventListener("click", initDrill);
-document.getElementById("decl").addEventListener("click", chooseDecl);
+document.getElementById("decl_quit").addEventListener("click", declQuit);
+document.getElementById("decl_ok").addEventListener("click", checkDeclAnswer)
+document.getElementById("decl").addEventListener("click", chooseDecl);;
+document.getElementById("decl_start").addEventListener("click", initDrill);
 document.getElementById("conj").addEventListener("click", chooseConj);
 document.getElementById("pos_button").addEventListener("click", togglePos);
 document.getElementById("case_button").addEventListener("click", toggleCase);
 document.getElementById("num_button").addEventListener("click", toggleNum);
 document.getElementById("freq_button").addEventListener("click", toggleFreq);
+
+
 
  /******************************************   
   * 
@@ -19,10 +23,17 @@ document.getElementById("freq_button").addEventListener("click", toggleFreq);
   * 
   */
 function showQuestion(){
+    elem =document.getElementById("decl_quizz");
+     elem.style.display ="flex";
     //show the translated meaning
-     elem =document.getElementById("meaning");
+     elem =document.getElementById("decl_meaningQuestion");
      elem.style.display ="block";
      elem.innerHTML = decl_question['meaningQuestion'];
+     elem =document.getElementById("decl_russianQuestion");
+     elem.innerHTML = decl_question['russianQuestion']
+     elem =document.getElementById("decl_clearQuestion");
+     elem.innerHTML = decl_question['clearQuestion'];
+
  }
 function toggleFreq(){
     let myDiv = document.getElementById("freq");
@@ -115,6 +126,66 @@ async function getCase(db){
   *  drill  controlling functions
   * 
   * ****************************************/
+
+
+ function declQuit(){
+    let msg =" Taux de succès : " + (decl_successNum / decl_trialNum * 100).toString() + "%.";
+    alert(msg);
+    let declDiv = document.getElementById("decl_quizz");
+    console.log(declDiv);
+    declDiv.style.display="none";
+    decl_trialNum = 0.0;
+
+}
+function checkDeclAnswer() {
+    decl_ans = document.getElementById("decl_answer").value;
+    const answerList = decl_ans.split(" ");
+    const questionList = decl_question['answer'].split(" ");
+    console.log("question list", questionList);
+    let ansOk = true;
+    for (i = 0; i < answerList.length; i++) {
+        wordOk = false;
+        let word = answerList[i];
+        console.log('word', word);
+        questionWordList = [];
+        if (questionWordList.includes("/")){
+            questionWordList = questionList[i].split("/");
+        } else {
+            questionWordList[0] = questionList[i];
+        }
+
+        for (j = 0; j < questionWordList.length; j++) {
+            wordOk = wordOk || word == questionWordList[j].replace('\u0301', '');
+            console.log("questionword", questionWordList[j].replace('\u0301', ''));
+            console.log("wordOk)", wordOk)
+        }
+        ansOk = ansOk && wordOk;
+        console.log("ansOk)", ansOk);
+    }
+    console.log("answer value", decl_ans);
+    if (decl_trialNum == 0.0){
+        console.log("decltrial num rest null");
+    }
+    let msg = "";
+    if (ansOk) {
+        decl_successNum++;
+        msg = "Bravo !\n"
+    } else {
+        msg = "C'est une erreur. \n"
+    }
+    msg = msg + "La bonne réponse était " + decl_question['answer'];
+    console.log("succesNum" , decl_successNum);
+    console.log("trialNum" , decl_trialNum);
+    console.log("ratio ",(decl_successNum / decl_trialNum)); 
+    msg = msg + ".\n Taux de succès : " + ((decl_successNum / decl_trialNum) * 100).toString() + "%.";
+    alert(msg);
+    decl_trialNum +=1 ;
+    runDrill();
+
+}
+
+
+ 
 /**
  * 
  *  @returns nothing but update global variable decl_question 
@@ -505,29 +576,33 @@ function getCaseQuestion(){
         choosenPos = retrievePos();
         choosenNum = retrieveNum();
         runDrill();
+        var decl_run = true ;
+        decl_trialNum = 1.0;
+        decl_successNum = 0;
     }
 }
-async function runDrill(){
+async function runDrill() {
     for ([key, val] of Object.entries(decl_question)) {
-        decl_question[key] ="";
+        decl_question[key] = "";
     }
+    document.getElementById("decl_answer").value="";
     //console.log('decl_question cleaned',decl_question )
-    decl_question['case']= getCaseQuestion();
+    decl_question['case'] = getCaseQuestion();
     //console.log('decl_question avec case',decl_question )
-    decl_question['num']= getNumQuestion();
+    decl_question['num'] = getNumQuestion();
     //console.log('decl_question avec num',decl_question )
-        //genderAbrev = getGenderForAdjOnly();
-        //decl_question[cas]= caseAbrev;
-        //decl_question[num] = numAbrev;
+    //genderAbrev = getGenderForAdjOnly();
+    //decl_question[cas]= caseAbrev;
+    //decl_question[num] = numAbrev;
 
     // start to query db
-        updateFrequency();
+    updateFrequency();
     //chose the words
-    if (pos_target['sub']){
+    if (pos_target['sub']) {
         console.log("call choose substantive");
         await chooseSubstantive();
     }
-    if (!pos_target["sub"]){
+    if (!pos_target["sub"]) {
         decl_question['gender'] = getGenderForAdjOnly();
         if (decl_question['case'] == 'acc') {
             // choix de animé
@@ -537,14 +612,14 @@ async function runDrill(){
             console.log("pas de choix de animé ", pos_target['sub'], decl_question['cas']);
         }
     }
-    if(pos_target['adj']){
+    if (pos_target['adj']) {
         console.log("call choose adjective");
         await chooseAdjective();
 
     }
     await makeQuestions();
     await makeAnswer();
-    document.getElementById('decl_quizz').style.display ="block";
+    document.getElementById('decl_quizz').style.display = "block";
     showQuestion();
     //caseText.innerHTML = await getCase(sqlite)
 }
@@ -573,11 +648,13 @@ var adj_gender_list = ["masc", "fem", "neut","plur"]
 
 
 
+
 var freq_target = "most";
 var choosenCases = [];
 var choosenPos = {sub : false, adj: false, pron : false};
 var choosenNum = [];
-
+var decl_trialNum = 0.0;
+var decl_successNum = 0.0;
 var decl_question = {
  case : "",
  num : "",

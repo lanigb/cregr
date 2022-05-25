@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "aa-sqlite": "^1.0.29",
+    "electron-windows": "^18.0.0",
     "fs": "^0.0.1-security",
     "sqlite3": "^5.0.8"
   }
