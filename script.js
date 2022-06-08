@@ -7,7 +7,12 @@ document.getElementById("pos_button").addEventListener("click", togglePos);
 document.getElementById("case_button").addEventListener("click", toggleCase);
 document.getElementById("num_button").addEventListener("click", toggleNum);
 document.getElementById("freq_button").addEventListener("click", toggleFreq);
-
+document.getElementById("decl_answer").addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        checkDeclAnswer();
+        }
+});
 
 
  /******************************************   
