@@ -483,7 +483,7 @@ async function chooseAdjective(){
  */
 async function chooseUniquePos(){
     console.log("decl_question avant chooseUnique pos", decl_question);
-    index = Math.floor(Math.random()* decl_unique_target.length);
+    index = Math.floor(Math.random()* decl_uniquePosType.length);
     decl_question["uniqueType"] = index;
     switch (index){
         case 0 :

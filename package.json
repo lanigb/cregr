@@ -15,7 +15,7 @@
       "target": [
         "AppImage"
       ],
-      "icon": "icon512.png",
+      "icon": "myres/icon512.png",
       "asar": "false"
     },
     "win": {
