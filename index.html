@@ -27,12 +27,21 @@
       
         <button class="accordion" id="pos_button">Type grammatical</button>
         <div id="pos" class="panel">
+          <input id="decl_sub_choice" type="radio" name="decl_postype" />
+          <label for="decl_sub_choice"> seul ou en combinaison</label><br>
+          <fieldset>
           <input id="sub_check" type="checkbox" name="substantive" />
           <label for="sub_check"> Substantifs</label><br>
           <input id="adj_check" type="checkbox" name="adjective" />
           <label for="adj_check"> Adjectifs</label><br>
-          <input id="pron_check" type="checkbox" name="pronoun" />
-          <label for="pron_check"> Pronoms</label><br>
+        </fieldset>
+        <input id="decl_alone_choice" type="radio" name="decl_postype" />
+          <label for="decl_alone_choice"> mot unique </label><br>
+          <fieldset>
+          <input id="decl_pronounperso_check" type="checkbox" name="decl_pronounperso" />
+
+          <label for="decl_pronounperso"> Pronom personnel</label><br>
+          </fieldset>
         </div>
         <button class="accordion" id="case_button">Cas</button>
         <div id="case" class="panel">
@@ -80,6 +89,9 @@
             <button class="decl_ans" id="decl_ok">OK</button>
              <script src="script.js"></script><br> 
           </div>
+          <div id="decl_success"></div>
+          <div id="decl_full_answer"></div>
+          <div id="decl_stat"></div>
         </div>
       
         

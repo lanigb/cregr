@@ -1,11 +1,28 @@
 {
   "name": "cregr-0.01",
   "version": "0.0.1",
-  "description": "first trial",
+  "description": "a Russian grammar study tool",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "postinstall": "install-app-deps"
+    "postinstall": "install-app-deps",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "crergr",
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "icon512.png",
+      "asar": "false"
+    },
+    "win": {
+      "target": "portable",
+      "icon": "myres/icon512.png",
+      "asar": "false"
+    }
   },
   "repository": {
     "type": "git",
@@ -15,10 +32,11 @@
     "declinaison",
     "russe"
   ],
-  "author": "Alain Bertrand",
+  "author": "alainbe@free.fr",
+  "email": "alainbe@free.fr",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "electron": "^18.2.3",
+    "electron": "^18.3.2",
     "electron-builder": "^23.0.3"
   },
   "dependencies": {

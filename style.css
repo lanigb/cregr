@@ -126,3 +126,10 @@ h3 {
   max-height: 55px;
   min-height: 55px;
 }
+#decl_success{
+font-size: 24px;
+}
+#decl_stat{
+font-size:16px;
+text-align: center;
+}
